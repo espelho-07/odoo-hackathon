@@ -5,6 +5,9 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [darkMode, setDarkMode] = useState(() => {
+        return localStorage.getItem('theme') === 'dark';
+    });
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -12,8 +15,19 @@ export const AuthProvider = ({ children }) => {
         if (storedUser && token) {
             setUser(JSON.parse(storedUser));
         }
+
+        if (darkMode) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+
         setLoading(false);
-    }, []);
+    }, [darkMode]);
+
+    const toggleTheme = () => setDarkMode(!darkMode);
 
     const login = async (email, password) => {
         // MOCK LOGIN FOR DEMO
@@ -55,7 +69,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, register, loading, darkMode, toggleTheme }}>
             {children}
         </AuthContext.Provider>
     );

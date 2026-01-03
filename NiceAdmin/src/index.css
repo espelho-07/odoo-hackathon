@@ -40,12 +40,12 @@
 
     /* Sidebar */
     .sidebar {
-        @apply fixed top-[60px] left-0 bottom-0 w-[300px] z-[996] transition-all p-5 overflow-y-auto bg-white shadow-lg;
+        @apply fixed top-20 left-0 bottom-0 w-[300px] z-[996] transition-all duration-300 p-5 overflow-y-auto bg-white shadow-lg;
         box-shadow: 0px 0 20px rgba(1, 41, 112, 0.1);
     }
 
     .nav-link {
-        @apply flex items-center text-sm font-semibold text-[#4154f1] transition-colors p-3 rounded bg-[#f6f9ff] mb-2;
+        @apply flex items-center gap-3 text-sm font-semibold text-[#4154f1] transition-colors p-3 rounded bg-[#f6f9ff] mb-2;
     }
 
     .nav-link.collapsed {
@@ -65,12 +65,67 @@
     }
 
     .main-content {
-        @apply mt-[60px] p-5 transition-all;
+        @apply transition-all duration-300;
     }
 
-    @media (min-width: 1200px) {
+    @media (min-width: 1024px) {
         .main-content {
             @apply ml-[300px];
         }
     }
+}
+
+/* Force Dark Mode Overrides */
+.dark body {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+.dark .card,
+.dark .header,
+.dark .sidebar,
+.dark .bg-white {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+    box-shadow: none !important;
+}
+
+.dark .text-dark,
+.dark .text-slate-800,
+.dark .text-\[\#012970\] {
+    color: #f8fafc !important;
+}
+
+.dark .text-slate-500,
+.dark .text-slate-600,
+.dark .text-gray-600,
+.dark .text-[#899bbd] {
+    color: #94a3b8 !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-\[\#f6f9ff\],
+.dark .bg-light {
+    background-color: #0f172a !important;
+}
+
+.dark .border-slate-100,
+.dark .border-slate-200 {
+    border-color: #334155 !important;
+}
+
+.dark .nav-link.collapsed:hover {
+    background-color: #334155 !important;
+    /* slate-700 */
+    color: #cad5e1 !important;
+}
+
+.dark .nav-link {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+.dark .nav-link.collapsed {
+    background-color: transparent !important;
+    color: #cbd5e1 !important;
 }

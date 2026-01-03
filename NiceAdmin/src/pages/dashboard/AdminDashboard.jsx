@@ -35,11 +35,11 @@ const AdminDashboard = () => {
                 className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
             >
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
-                    <p className="text-slate-500 mt-1">Welcome back, Admin. Here's what's happening today.</p>
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Dashboard Overview</h1>
+                    <p className="text-slate-500 dark:text-slate-400 mt-1">Welcome back, Admin. Here's what's happening today.</p>
                 </div>
                 <div className="flex gap-3">
-                    <Button variant="secondary">Download Report</Button>
+                    <Button variant="secondary" className="dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700">Download Report</Button>
                     <Button>+ Add Employee</Button>
                 </div>
             </motion.div>
@@ -61,11 +61,11 @@ const AdminDashboard = () => {
                                 <div className={`p-3 rounded-2xl ${stat.color} bg-opacity-10 text-${stat.color.replace('bg-', '')}`}>
                                     <stat.icon size={24} className={stat.color.replace('bg-', 'text-')} />
                                 </div>
-                                <span className="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded-full">{stat.trend}</span>
+                                <span className="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-full">{stat.trend}</span>
                             </div>
                             <div>
-                                <p className="text-slate-500 text-sm font-medium">{stat.title}</p>
-                                <h3 className="text-3xl font-bold text-slate-800 mt-1">{stat.value}</h3>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">{stat.title}</p>
+                                <h3 className="text-3xl font-bold text-slate-800 dark:text-white mt-1">{stat.value}</h3>
                             </div>
                         </Card>
                     </motion.div>
@@ -102,24 +102,24 @@ const AdminDashboard = () => {
                 {/* Side Content */}
                 <div className="space-y-8">
                     <Card title="Pending Requests" noPadding>
-                        <div className="divide-y divide-slate-100">
+                        <div className="divide-y divide-slate-100 dark:divide-slate-700">
                             {pendingLeaves.map((leave) => (
-                                <div key={leave.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                                <div key={leave.id} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500">
+                                        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-500 dark:text-slate-300">
                                             {leave.employee.charAt(0)}
                                         </div>
                                         <div>
-                                            <p className="text-sm font-semibold text-slate-800">{leave.employee}</p>
-                                            <p className="text-xs text-slate-500">{leave.type} • {leave.date}</p>
+                                            <p className="text-sm font-semibold text-slate-800 dark:text-white">{leave.employee}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">{leave.type} • {leave.date}</p>
                                         </div>
                                     </div>
-                                    <Button size="sm" variant="secondary">Review</Button>
+                                    <Button size="sm" variant="secondary" className="dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600">Review</Button>
                                 </div>
                             ))}
                         </div>
-                        <div className="p-4 bg-slate-50 border-t border-slate-100 text-center">
-                            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700">View All Requests</button>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
+                            <button className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">View All Requests</button>
                         </div>
                     </Card>
 
