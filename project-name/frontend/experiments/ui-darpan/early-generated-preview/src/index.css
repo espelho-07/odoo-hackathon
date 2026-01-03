@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+  Dayflow Global Styles 
+  Using Tailwind for almost everything, keeping this file minimal.
+*/
+
+body {
+  @apply font-sans;
+}
