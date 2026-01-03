@@ -31,7 +31,16 @@ export const employees = [
         deductions: {
             pf: 5400, // 12%
             tax: 2500
-        }
+        },
+        // Profile Narratives
+        about: "Hardworking and dedicated Project Manager with over 8 years of experience. I am passionate about building scalable solutions and driving team success.",
+        jobLove: "I love the collaborative environment at Dayflow. Solving complex problems and seeing how our solutions impact users directly is the most rewarding part of my day.",
+        interests: ["Open Source Contribution", "Tech Blogging", "Hiking & Photography"],
+        skills: ["Project Management", "Agile", "Scrum", "Risk Management", "JIRA"],
+        certifications: [
+            { name: "PMP Certified", org: "PMI" },
+            { name: "Certified Scrum Master", org: "Scrum Alliance" }
+        ]
     },
     {
         id: 2,
@@ -63,7 +72,16 @@ export const employees = [
         deductions: {
             pf: 4200,
             tax: 1500
-        }
+        },
+        // Profile Narratives
+        about: "Full Stack Developer with a passion for clean code and efficient algorithms. Always eager to learn new technologies and improve my skillset.",
+        jobLove: "The technical challenges we face are exciting. I enjoy optimizing performance and learning new frameworks.",
+        interests: ["Gaming", "Coding Competitions", "Sci-Fi Movies"],
+        skills: ["React", "Node.js", "Python", "SQL", "AWS"],
+        certifications: [
+            { name: "AWS Certified Developer", org: "Amazon" },
+            { name: "Meta Frontend Specialist", org: "Meta" }
+        ]
     },
     {
         id: 3,
@@ -159,6 +177,15 @@ export const employees = [
         deductions: {
             pf: 3360,
             tax: 0
-        }
+        },
+        // Profile Narratives
+        about: "Creative collaborative marketer with a knack for viral campaigns. I specialize in digital storytelling and brand positioning.",
+        jobLove: "I love the creative freedom and the ability to test new ideas rapidly.",
+        interests: ["Social Media Trends", "Content Creation", "Traveling"],
+        skills: ["SEO", "Content Marketing", "Social Media", "Analytics"],
+        certifications: [
+            { name: "Google Analytics Certified", org: "Google" },
+            { name: "HubSpot Content Marketing", org: "HubSpot" }
+        ]
     }
 ];

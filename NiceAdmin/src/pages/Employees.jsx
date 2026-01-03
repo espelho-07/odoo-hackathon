@@ -64,7 +64,7 @@ export default function Employees({ userRole }) {
 
             {/* PROFILE VIEW MODAL */}
             {selectedEmployee && (
-                <Modal onClose={() => setSelectedEmployee(null)}>
+                <Modal isOpen={true} onClose={() => setSelectedEmployee(null)}>
                     <EmployeeProfile
                         employee={selectedEmployee}
                         userRole={userRole}
@@ -74,7 +74,7 @@ export default function Employees({ userRole }) {
 
             {/* ADD EMPLOYEE MODAL (Wireframe: Sign Up Fields) */}
             {isAddModalOpen && (
-                <Modal onClose={() => setIsAddModalOpen(false)}>
+                <Modal isOpen={true} onClose={() => setIsAddModalOpen(false)}>
                     <div className="p-2">
                         <h3 className="text-xl font-bold text-[#012970] mb-1">Onboard New Employee</h3>
                         <p className="text-sm text-gray-500 mb-6">Create a new user account. Login credentials will be auto-generated.</p>

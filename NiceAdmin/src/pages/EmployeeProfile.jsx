@@ -107,29 +107,26 @@ export default function EmployeeProfile({ employee, userRole }) {
                             </div>
                         </div>
 
-                        {/* Profile Narrative (From NEW Wireframe) */}
+                        {/* Profile Narrative (Dynamic Data) */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Left Column: About & Bio */}
                             <div className="lg:col-span-2 space-y-6">
                                 <div className="card">
                                     <h5 className="card-title text-base">About</h5>
                                     <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                                        Hardworking and dedicated professional with over 3 years of experience in the industry.
-                                        I am passionate about building scalable solutions and contributing to team success.
-                                        Always eager to learn new technologies and improve my skillset.
+                                        {employee.about || "No bio available."}
                                     </p>
 
                                     <h5 className="card-title text-base mt-2">What I love about my job</h5>
                                     <p className="text-sm text-gray-600 leading-relaxed">
-                                        I love the collaborative environment at Dayflow. Solving complex problems and seeing
-                                        how our solutions impact users directly is the most rewarding part of my day.
+                                        {employee.jobLove || "I love working here!"}
                                     </p>
 
                                     <h5 className="card-title text-base mt-4">My interests and hobbies</h5>
                                     <ul className="list-disc list-inside text-sm text-gray-600 space-y-1 ml-1">
-                                        <li>Open Source Contribution</li>
-                                        <li>Tech Blogging</li>
-                                        <li>Hiking & Photography</li>
+                                        {(employee.interests || []).map((interest, idx) => (
+                                            <li key={idx}>{interest}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </div>
@@ -139,7 +136,7 @@ export default function EmployeeProfile({ employee, userRole }) {
                                 <div className="card">
                                     <h5 className="card-title text-base">Skills</h5>
                                     <div className="flex flex-wrap gap-2">
-                                        {['React', 'JavaScript', 'Node.js', 'Teamwork', 'Agile', 'UI/UX'].map(skill => (
+                                        {(employee.skills || []).map(skill => (
                                             <span key={skill} className="bg-blue-50 text-[#4154f1] text-xs font-semibold px-2.5 py-1 rounded border border-blue-100">
                                                 {skill}
                                             </span>
@@ -150,11 +147,7 @@ export default function EmployeeProfile({ employee, userRole }) {
                                 <div className="card">
                                     <h5 className="card-title text-base">Certifications</h5>
                                     <ul className="space-y-3">
-                                        {[
-                                            { name: "Certified React Developer", org: "Meta" },
-                                            { name: "AWS Cloud Practitioner", org: "Amazon" },
-                                            { name: "Agile Fundamentals", org: "Scrum Alliance" }
-                                        ].map((cert, idx) => (
+                                        {(employee.certifications || []).map((cert, idx) => (
                                             <li key={idx} className="flex items-start gap-3 text-sm">
                                                 <div className="mt-1 min-w-[20px] text-green-500">
                                                     <Shield size={16} />
@@ -182,9 +175,33 @@ export default function EmployeeProfile({ employee, userRole }) {
 
                 {/* RESUME TAB */}
                 {activeTab === 'resume' && (
-                    <div className="text-center py-10 text-gray-400">
-                        <FileText size={48} className="mx-auto mb-4 opacity-50" />
-                        <p>Resume document preview would appear here.</p>
+                    <div className="animate-fade-in">
+                        <div className="flex items-center justify-between bg-white p-4 border border-gray-200 rounded-lg shadow-sm mb-6">
+                            <div className="flex items-center gap-4">
+                                <div className="bg-red-50 text-red-600 p-3 rounded-lg">
+                                    <FileText size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold text-[#012970]">{employee.name.split(' ')[0]}_Resume.pdf</h4>
+                                    <p className="text-xs text-gray-500">4.5 MB • Uploaded on {employee.joinDate}</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <button className="p-2 text-gray-400 hover:text-[#4154f1] transition-colors" title="View">
+                                    <LayoutDashboard size={18} />
+                                </button>
+                                <button className="flex items-center gap-2 bg-[#4154f1] text-white px-4 py-2 rounded text-sm font-bold shadow hover:bg-blue-700 transition-colors">
+                                    <Shield size={16} /> Download
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Mock PDF Viewer */}
+                        <div className="bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-[400px] flex flex-col items-center justify-center text-gray-400">
+                            <FileText size={48} className="mb-2 opacity-50" />
+                            <p className="font-medium">Document Preview</p>
+                            <span className="text-xs">Preview is not available in demo mode</span>
+                        </div>
                     </div>
                 )}
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from './Navbar';
+import Topbar from './Topbar';
 import Sidebar from './Sidebar';
 
 export default function Layout({ children, activePage, setActivePage, userRole, handleLogout }) {
@@ -7,10 +7,9 @@ export default function Layout({ children, activePage, setActivePage, userRole, 
 
     return (
         <>
-            <Navbar
+            <Topbar
                 toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-                userRole={userRole}
-                handleLogout={handleLogout}
+                isSidebarOpen={isSidebarOpen}
             />
 
             <Sidebar
@@ -20,20 +19,22 @@ export default function Layout({ children, activePage, setActivePage, userRole, 
                 userRole={userRole}
             />
 
-            <main className={`main-content ${!isSidebarOpen ? 'lg:ml-0' : ''}`}>
-                <div className="pagetitle mb-5">
-                    <h1 className="capitalize">{activePage}</h1>
-                    <nav>
-                        <ol className="flex text-sm text-gray-500 mt-1">
-                            <li className="after:content-['/'] after:px-2">Home</li>
-                            <li className="text-[#444444] capitalize">{activePage}</li>
-                        </ol>
-                    </nav>
-                </div>
+            <main className={`main-content transition-all duration-300 ${!isSidebarOpen ? 'lg:ml-0' : 'lg:ml-72'} ${!isSidebarOpen ? 'ml-0' : 'ml-0'}`}>
+                <div className="p-6 pt-24 bg-slate-50 min-h-screen">
+                    <div className="pagetitle mb-6">
+                        <h1 className="capitalize text-2xl font-bold text-slate-800">{activePage}</h1>
+                        <nav>
+                            <ol className="flex text-sm text-slate-500 mt-1">
+                                <li className="after:content-['/'] after:px-2">Home</li>
+                                <li className="text-indigo-600 capitalize font-medium">{activePage}</li>
+                            </ol>
+                        </nav>
+                    </div>
 
-                <section className="section dashboard">
-                    {children}
-                </section>
+                    <section className="section dashboard">
+                        {children}
+                    </section>
+                </div>
             </main>
         </>
     );
