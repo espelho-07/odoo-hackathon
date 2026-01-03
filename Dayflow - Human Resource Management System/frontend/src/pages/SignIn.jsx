@@ -14,6 +14,12 @@ const SignIn = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // Clear old session when landing on login page to prevent stale state
+    React.useEffect(() => {
+        localStorage.removeItem('dayflow_session');
+        localStorage.removeItem('dayflow_current_user');
+    }, []);
+
     const handleRoleChange = (newRole) => {
         setRole(newRole);
         setError('');
@@ -43,7 +49,7 @@ const SignIn = () => {
             }
 
             // Save session (Temporary hybrid approach: Keep using localStorage for now so other parts of app don't break immediately)
-            localStorage.setItem('dayflow_current_user', JSON.stringify(user));
+            localStorage.setItem('dayflow_session', JSON.stringify(user));
 
             navigate('/dashboard');
         } catch (err) {
