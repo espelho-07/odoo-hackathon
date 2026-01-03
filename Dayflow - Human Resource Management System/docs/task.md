@@ -1,0 +1,27 @@
+# Tasks
+
+- [x] Explore `ui-darpan` Employee implementation
+- [x] Backup current `ui-manav` Employees page
+- [x] Port `ui-darpan` Employee page to `ui-manav`
+- [x] Adapt code for `ui-manav` components and context
+- [x] Verify functionality for Admin
+- [x] Add Attendance Summary Cards (Admin)
+- [x] Update Salary Visibility (Read-only for Emp, Edit for Admin)
+- [x] Enhance Payroll Page (INR, Payslip Modal, Sections)
+- [x] Add Charts to Dashboard (Recharts)
+- [x] Implement Restricted Employee Sign-Up (Activation Flow)
+- [x] Make Notifications Responsive
+- [x] Fix Blank Dashboard (Debug Mode)
+- [x] Split History (Attendance vs Leave)
+- [x] Add Extra Hours Card
+- [x] Add Event Calendar (Admin & Employee)
+- [ ] Re-enable Charts (Fix Recharts Crash)
+- [x] Initialize Backend Project (Express + MySQL)
+- [x] Implement Database Connection (`db.js`)
+- [x] Implement API Routes (Employees, Attendance, Leaves, Stats)
+- [ ] Verify Backend Requests
+- [x] Create `api.js` service in Frontend
+- [x] Connect Login Page to Backend
+- [x] Connect Dashboard to Backend
+- [x] Connect Employee Management to Backend
+- [x] Connect Attendance & Leaves to Backend
