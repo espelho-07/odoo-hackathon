@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply font-sans text-dark bg-light;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-display text-[#012970];
+    }
+}
+
+/* Custom Card Style mimicking NiceAdmin */
+@layer components {
+    .card {
+        @apply bg-white rounded-lg border-0 shadow-sm mb-8 p-5;
+        box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+    }
+
+    .card-title {
+        @apply p-0 text-lg font-medium text-[#012970] mb-4 font-display block;
+    }
+
+    .card-title span {
+        @apply text-[#899bbd] text-sm font-normal pl-2;
+    }
+
+    /* Navbar */
+    .header {
+        @apply h-[60px] bg-white transition-all z-[997] pl-5 md:pl-10 shadow-sm fixed top-0 left-0 right-0 flex items-center;
+        box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        @apply fixed top-[60px] left-0 bottom-0 w-[300px] z-[996] transition-all p-5 overflow-y-auto bg-white shadow-lg;
+        box-shadow: 0px 0 20px rgba(1, 41, 112, 0.1);
+    }
+
+    .nav-link {
+        @apply flex items-center text-sm font-semibold text-[#4154f1] transition-colors p-3 rounded bg-[#f6f9ff] mb-2;
+    }
+
+    .nav-link.collapsed {
+        @apply text-[#012970] bg-transparent font-semibold;
+    }
+
+    .nav-link.collapsed:hover {
+        @apply text-[#4154f1] bg-[#f6f9ff];
+    }
+
+    .nav-link i {
+        @apply text-base mr-3 text-[#4154f1];
+    }
+
+    .nav-link.collapsed i {
+        @apply text-[#899bbd];
+    }
+
+    .main-content {
+        @apply mt-[60px] p-5 transition-all;
+    }
+
+    @media (min-width: 1200px) {
+        .main-content {
+            @apply ml-[300px];
+        }
+    }
+}
