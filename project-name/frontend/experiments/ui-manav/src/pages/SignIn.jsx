@@ -1,86 +1,151 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
-import { LogIn } from 'lucide-react';
+import { loginUser } from '../utils/storage';
+import { Briefcase, ArrowRight, ShieldCheck, User } from 'lucide-react';
 
-/**
- * SignIn Page
- * 
- * Purpose:
- * Simple login interface for users to access the dashboard.
- * 
- * Functionality:
- * - Mock login logic (redirects to /dashboard on click).
- * - Toggle for user role (just for demo purposes to switch between Employee/Admin).
- */
 const SignIn = () => {
     const navigate = useNavigate();
+    const [role, setRole] = useState('employee'); // 'employee' | 'admin'
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    // Auto-fill demo credentials based on role for convenience
+    useEffect(() => {
+        if (role === 'admin') {
+            setEmail('admin@dayflow.com');
+            setPassword('123');
+        } else {
+            setEmail('john@dayflow.com');
+            setPassword('123');
+        }
+        setError('');
+    }, [role]);
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // In a real app, validation and API call would go here.
-        // For demo, we just redirect.
-        if (email.includes('admin')) {
-            navigate('/admin');
-        } else {
-            navigate('/dashboard');
-        }
+        setLoading(true);
+        setError('');
+
+        setTimeout(() => {
+            const result = loginUser(email, password);
+
+            if (result.success) {
+                // Enforce Role Check
+                if (result.user.role !== role) {
+                    setError(`Access Denied. You are logged in as ${result.user.role}, but tried to sign in as ${role}.`);
+                    setLoading(false);
+                    return;
+                }
+
+                navigate('/dashboard');
+            } else {
+                setError(result.message);
+                setLoading(false);
+            }
+        }, 800);
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-700">
-                <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-600/30">
-                        <LogIn className="text-white w-8 h-8" />
-                    </div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-                    <p className="text-slate-400">Sign in to your Dayflow account</p>
-                </div>
+        <div className="min-h-screen bg-slate-950 flex relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950 pointer-events-none"></div>
 
-                <form onSubmit={handleLogin} className="space-y-6">
-                    <InputField
-                        label="Email Address"
-                        type="email"
-                        placeholder="you@dayflow.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+            <div className="w-full max-w-5xl mx-auto flex items-center justify-center p-4 relative z-10">
+                <div className="grid md:grid-cols-2 gap-12 items-center w-full">
 
-                    <InputField
-                        label="Password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-
-                    <div className="flex items-center justify-between text-sm">
-                        <label className="flex items-center text-slate-400 cursor-pointer">
-                            <input type="checkbox" className="mr-2 rounded border-gray-600 bg-gray-700 text-indigo-600 focus:ring-indigo-500" />
-                            Remember me
-                        </label>
-                        <a href="#" className="text-indigo-400 hover:text-indigo-300">Forgot password?</a>
+                    {/* Left Side: Copy */}
+                    <div className="hidden md:block space-y-6">
+                        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 backdrop-blur-xl mb-8">
+                            <Briefcase className="text-indigo-400" size={32} />
+                        </div>
+                        <h1 className="text-5xl font-bold text-white tracking-tight leading-tight">
+                            Manage your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Team</span> with confidence.
+                        </h1>
+                        <p className="text-lg text-slate-400 leading-relaxed max-w-md">
+                            Dayflow is the modern, intuitive HR platform designed for growing teams. Streamline attendance, payroll, and more.
+                        </p>
                     </div>
 
-                    <Button type="submit" className="w-full py-3 text-lg">
-                        Sign In
-                    </Button>
-                </form>
+                    {/* Right Side: Form */}
+                    <div className="bg-slate-900/80 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-slate-800 shadow-2xl relative">
 
-                <div className="mt-6 text-center text-slate-500 text-sm">
-                    Don't have an account? <span className="text-indigo-400 cursor-pointer hover:underline">Sign Up</span>
-                </div>
+                        {/* Role Switcher */}
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-950 p-1.5 rounded-full border border-slate-800 shadow-xl flex gap-1">
+                            <button
+                                onClick={() => setRole('employee')}
+                                className={`flex items-center gap-2 px-6 py-2 rounded-full text-sm font-semibold transition-all ${role === 'employee'
+                                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
+                                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                                    }`}
+                            >
+                                <User size={16} /> Employee
+                            </button>
+                            <button
+                                onClick={() => setRole('admin')}
+                                className={`flex items-center gap-2 px-6 py-2 rounded-full text-sm font-semibold transition-all ${role === 'admin'
+                                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                                    }`}
+                            >
+                                <ShieldCheck size={16} /> Admin
+                            </button>
+                        </div>
 
-                <div className="mt-8 p-4 bg-slate-700/50 rounded-lg text-xs text-slate-400 text-center">
-                    <p className="mb-1 fw-bold text-slate-300">Demo Credentials:</p>
-                    <p>Employee: user@dayflow.com / anypass</p>
-                    <p>Admin: admin@dayflow.com / anypass</p>
+                        <div className="mb-8 mt-4 text-center">
+                            <h2 className="text-2xl font-bold text-white">
+                                {role === 'admin' ? 'Admin Portal' : 'Employee Login'}
+                            </h2>
+                            <p className="text-slate-400 text-sm">Welcome back! Please enter your details.</p>
+                        </div>
+
+                        {error && (
+                            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                {error}
+                            </div>
+                        )}
+
+                        <form onSubmit={handleLogin} className="space-y-5">
+                            <InputField
+                                label="Email"
+                                type="email"
+                                placeholder="name@company.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <label className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Password</label>
+                                </div>
+                                <InputField
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <Button
+                                type="submit"
+                                variant={role === 'admin' ? 'secondary' : 'primary'}
+                                className={`w-full py-4 text-lg flex items-center justify-center gap-2 group mt-4 ${role === 'admin' ? '!bg-purple-600 hover:!bg-purple-500' : ''}`}
+                            >
+                                {loading ? 'Authenticating...' : `Sign in as ${role === 'admin' ? 'Admin' : 'Employee'}`}
+                                {!loading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
+                            </Button>
+                        </form>
+
+                        <div className="mt-8 text-center text-xs text-slate-500">
+                            <p>Secured by Dayflow Identity</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,70 +1,130 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import PageLayout from '../components/PageLayout';
 import Card from '../components/Card';
-import { attendanceData } from '../data/dummyAttendance';
+import Table from '../components/Table';
+import Button from '../components/Button';
+import { getCurrentUser, getData, setData } from '../utils/storage';
+import { Clock, PlayCircle, StopCircle } from 'lucide-react';
 
 /**
  * Attendance Page
  * 
  * Purpose:
- * View personal attendance history.
+ * - Employee: Check In / Check Out. View history.
+ * - Admin: View all employee attendance.
  */
 const Attendance = () => {
+    const user = getCurrentUser();
+    const isAdmin = user?.role === 'admin';
+    const [attendance, setAttendance] = useState([]);
+    const [todayRecord, setTodayRecord] = useState(null);
 
-    // Helper for status badge colors
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'Present': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-            case 'Absent': return 'bg-red-500/10 text-red-400 border-red-500/20';
-            case 'Late': return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-            default: return 'bg-slate-500/10 text-slate-400';
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    const loadData = () => {
+        const allAttendance = getData('dayflow_attendance');
+        const today = new Date().toISOString().split('T')[0];
+
+        if (isAdmin) {
+            setAttendance(allAttendance);
+        } else {
+            const myAttendance = allAttendance.filter(a => a.userId === user.id);
+            setAttendance(myAttendance);
+
+            // Check if already checked in today
+            const todayRec = myAttendance.find(a => a.date === today);
+            setTodayRecord(todayRec);
         }
     };
 
-    return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-end">
-                <div>
-                    <h2 className="text-2xl font-bold text-white">Attendance History</h2>
-                    <p className="text-slate-400">View your daily check-in and check-out times.</p>
-                </div>
-                <div className="bg-slate-800 p-2 rounded-lg border border-slate-700 text-sm text-slate-300">
-                    <span className="font-semibold text-white">October 2023</span>
-                </div>
-            </div>
+    const handlePunch = (type) => { // 'in' or 'out'
+        const allAttendance = getData('dayflow_attendance');
+        const today = new Date().toISOString().split('T')[0];
+        const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-            <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="text-slate-500 border-b border-slate-700 text-sm uppercase tracking-wider">
-                                <th className="py-4 px-4 font-semibold">Date</th>
-                                <th className="py-4 px-4 font-semibold">Status</th>
-                                <th className="py-4 px-4 font-semibold">Check In</th>
-                                <th className="py-4 px-4 font-semibold">Check Out</th>
-                                <th className="py-4 px-4 font-semibold">Work Hours</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-sm">
-                            {attendanceData.map((record) => (
-                                <tr key={record.id} className="border-b border-slate-700/50 hover:bg-slate-700/20 transition-colors">
-                                    <td className="py-4 px-4 font-medium text-white">{new Date(record.date).toLocaleDateString()}</td>
-                                    <td className="py-4 px-4">
-                                        <span className={`px-2 py-1 rounded-md text-xs border ${getStatusColor(record.status)}`}>
-                                            {record.status}
-                                        </span>
-                                    </td>
-                                    <td className="py-4 px-4 text-slate-300">{record.checkIn}</td>
-                                    <td className="py-4 px-4 text-slate-300">{record.checkOut}</td>
-                                    <td className="py-4 px-4 text-slate-400 font-mono">
-                                        {record.status === 'Present' ? '8h 00m' : '-'}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+        if (type === 'in') {
+            const newRecord = {
+                id: Date.now(),
+                userId: user.id,
+                date: today,
+                status: 'Present',
+                checkIn: time,
+                checkOut: '-'
+            };
+            allAttendance.push(newRecord);
+        } else if (type === 'out' && todayRecord) {
+            const index = allAttendance.findIndex(a => a.id === todayRecord.id);
+            if (index !== -1) {
+                allAttendance[index].checkOut = time;
+            }
+        }
+
+        setData('dayflow_attendance', allAttendance);
+        loadData(); // Refresh state
+    };
+
+    // Table Config
+    const columns = [
+        { header: "Date", accessor: "date" },
+        {
+            header: "Status", accessor: (row) => (
+                <span className={`px-2 py-1 rounded text-xs border ${row.status === 'Present' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' :
+                        'bg-red-500/20 text-red-400 border-red-500/20'
+                    }`}>
+                    {row.status}
+                </span>
+            )
+        },
+        { header: "Check In", accessor: "checkIn" },
+        { header: "Check Out", accessor: "checkOut" },
+    ];
+
+    if (isAdmin) {
+        columns.unshift({ header: "Employee ID", accessor: "userId" });
+    }
+
+    return (
+        <PageLayout title="Attendance">
+            {!isAdmin && (
+                <div className="mb-8">
+                    <Card className="flex flex-col md:flex-row items-center justify-between gap-6 border-indigo-500/20 bg-gradient-to-r from-slate-800 to-indigo-900/20">
+                        <div>
+                            <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                                <Clock className="text-indigo-400" />
+                                {todayRecord ? "You are checked in." : "Mark your attendance"}
+                            </h2>
+                            <p className="text-slate-400">
+                                {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                            </p>
+                        </div>
+
+                        <div>
+                            {!todayRecord && (
+                                <Button onClick={() => handlePunch('in')} className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-2 px-6 py-3 text-lg">
+                                    <PlayCircle /> Check In
+                                </Button>
+                            )}
+                            {todayRecord && todayRecord.checkOut === '-' && (
+                                <Button onClick={() => handlePunch('out')} className="bg-red-500 hover:bg-red-600 flex items-center gap-2 px-6 py-3 text-lg">
+                                    <StopCircle /> Check Out
+                                </Button>
+                            )}
+                            {todayRecord && todayRecord.checkOut !== '-' && (
+                                <div className="text-emerald-400 font-semibold border border-emerald-500/30 px-4 py-2 rounded-lg bg-emerald-500/10">
+                                    Day Completed
+                                </div>
+                            )}
+                        </div>
+                    </Card>
                 </div>
+            )}
+
+            <Card title={isAdmin ? "All Attendance Records" : "My Attendance History"}>
+                <Table columns={columns} data={attendance} />
             </Card>
-        </div>
+        </PageLayout>
     );
 };
 
